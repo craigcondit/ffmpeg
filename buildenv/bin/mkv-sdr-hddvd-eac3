@@ -1,0 +1,35 @@
+#!/bin/bash
+
+# helper script to build MKV files
+
+usage() {
+  echo "Usage: $0 <input-file> <output-file> <title> <audio-title> <video-track> <audio-track> [args...]" >&2
+  echo "  Example: $0 Movie.m2ts Movie.mkv 'My Movie' 'DTS-HD MA' 0 1 -ss 00:10:00 -t 00:10:00" >&2
+  exit 1
+}
+
+FFMPEG=ffmpeg
+INPUT_FILE=$1 ; shift ; [ ! -z "${INPUT_FILE}" ] || usage
+OUTPUT_FILE=$1 ; shift ; [ ! -z "${OUTPUT_FILE}" ] || usage
+TITLE=$1 ; shift ; [ ! -z "${TITLE}" ] || usage
+AUDIO_TITLE=$1 ; shift ; [ ! -z "${AUDIO_TITLE}" ] || usage
+VIDEO_TRACK=$1 ; shift ; [ ! -z "${VIDEO_TRACK}" ] || usage
+AUDIO_TRACK=$1 ; shift ; [ ! -z "${AUDIO_TRACK}" ] || usage
+AUDIO_LANG=${AUDIO_LANG:=eng}
+AUDIO_CHANNELS=${AUDIO_CHANNELS:=6}
+
+time $FFMPEG \
+	-hide_banner \
+	${FFMPEG_INPUT_OPTS} \
+	-i "${INPUT_FILE}" \
+	-r 30000/1001 \
+	-map_chapters 0 \
+        -metadata title="${TITLE}" \
+	-metadata:s:t:0 filename="" -metadata:s:t:0 mimetype="image/jpeg" \
+	-map "0:${VIDEO_TRACK}" -metadata:s:v:0 language=eng -metadata:s:v:0 title="${TITLE}" \
+	-map "0:${AUDIO_TRACK}" -metadata:s:a:0 language="${AUDIO_LANG}" -metadata:s:a:0 title="${AUDIO_TITLE}" \
+	-c:v libx265 -preset slow -crf 22 \
+	$FFMPEG_VIDEO_OPTS \
+	-c:a eac3 -ac "${AUDIO_CHANNELS}" -b:a 1536k \
+	"$@" \
+        "${OUTPUT_FILE}"

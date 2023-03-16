@@ -1,0 +1,33 @@
+apiVersion: v1
+kind: Pod
+metadata:
+  labels:
+    run: transcode
+  name: transcode
+spec:
+  containers:
+    - name: ffmpeg
+      image: insideo/ffmpeg
+      resources:
+        requests:
+          cpu: 8
+          memory: 16Gi
+      command: [ "mkv-4k-hdr-eac3", "/input/My.Movie.mkv", "/output/My.Movie.mkv", "My Movie", "E-AC3", "0", "1" ]
+      volumeMounts:
+        - name: nfs-input
+          mountPath: /input
+        - name: nfs-output
+          mountPath: /output
+        - name: scratch
+          mountPath: /scratch
+  volumes:
+    - name: nfs-input
+      nfs:
+        server: nfs-server
+        path: /export/input
+    - name: nfs-output
+      nfs:
+        server: nfs-server
+        path: /export/output
+    - name: scratch
+      emptyDir:
