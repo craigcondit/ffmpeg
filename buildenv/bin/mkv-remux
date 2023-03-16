@@ -18,7 +18,7 @@ AUDIO_TRACK=$1 ; shift ; [ ! -z "${AUDIO_TRACK}" ] || usage
 AUDIO_LANG=${AUDIO_LANG:=eng}
 
 time $FFMPEG \
-	-nostdin -y \
+	-nostdin -y -progress pipe:1 \
 	-hide_banner \
 	${FFMPEG_INPUT_OPTS} \
 	-i "${INPUT_FILE}" \
