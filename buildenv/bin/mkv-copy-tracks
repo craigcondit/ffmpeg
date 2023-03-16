@@ -18,6 +18,7 @@ VIDEO_TRACK=$1 ; shift ; [ ! -z "${VIDEO_TRACK}" ] || usage
 AUDIO_TRACK=$1 ; shift ; [ ! -z "${AUDIO_TRACK}" ] || usage
 
 time $FFMPEG \
+	-nostdin -y \
 	-hide_banner \
 	${FFMPEG_INPUT_OPTS} \
 	-i "${INPUT_FILE}" \

@@ -21,6 +21,7 @@ AUDIO_LANG=${AUDIO_LANG:=eng}
 AUDIO_CHANNELS=${AUDIO_CHANNELS:=6}
 
 time $FFMPEG \
+	-nostdin -y \
 	-hide_banner \
 	${FFMPEG_INPUT_OPTS} \
 	-i "${INPUT_FILE}" \

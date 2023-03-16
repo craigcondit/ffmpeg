@@ -21,6 +21,7 @@ AUDIO_CHANNELS=${AUDIO_CHANNELS:=6}
 X265_PARAMS="keyint=60:bframes=3:vbv-bufsize=75000:vbv-maxrate=75000:colorprim=bt2020:transfer=smpte2084:colormatrix=bt2020nc:master-display='G(13250,34500)B(7500,3000)R(34000,16000)WP(15635,16450)L(10000000,500)'"
 
 time $FFMPEG \
+	-nostdin -y \
 	-hide_banner \
 	$FFMPEG_INPUT_OPTS \
 	-i "${INPUT_FILE}" \
